@@ -20,7 +20,7 @@ Right now adding custom models and Loras is a bit messy since I simply download 
 
 Every model has its own settings that it works well with. You can look up their recommended settings from model cards on HuggingFace or somewhere else.
 
-## Juggernaut X Settings
+## Juggernaut X Settings
 
 ### Recommended Settings Normal Version (VAE is baked in):
 
