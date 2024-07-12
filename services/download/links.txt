@@ -1,0 +1,14 @@
+https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors
+  out=Stable-diffusion/sd_xl_base_1.0.safetensors
+https://huggingface.co/stabilityai/sdxl-turbo/resolve/main/sd_xl_turbo_1.0_fp16.safetensors
+  out=Stable-diffusion/sd_xl_turbo_1.0_fp16.safetensors
+https://huggingface.co/afurkank/img/resolve/main/Juggernaut_X_RunDiffusion.safetensors
+  out=Stable-diffusion/Juggernaut_X_RunDiffusion.safetensors
+https://huggingface.co/afurkank/img/resolve/main/Juggernaut_X_RunDiffusion_Hyper.safetensors
+  out=Stable-diffusion/Juggernaut_X_RunDiffusion_Hyper.safetensors
+https://huggingface.co/afurkank/img/resolve/main/sd3_medium_incl_clips_t5xxlfp16.safetensors
+  out=Stable-diffusion/sd3_medium_incl_clips_t5xxlfp16.safetensors
+https://huggingface.co/afurkank/img/resolve/main/white_1_0.safetensors
+  out=Lora/white_1_0.safetensors
+https://huggingface.co/afurkank/img/resolve/main/detailed_hands-000002.safetensors
+  out=Lora/detailed_hands-000002.safetensors
