@@ -14,6 +14,10 @@ docker compose --profile [ui] up --build
 # where [ui] is one of: auto | auto-cpu | comfy | comfy-cpu
 ```
 
+### Note
+
+Do not select *sd3_medium_incl_clips_t5xxlfp16*. It breaks everything at the moment 🥲
+
 # How to add custom models
 
 Right now adding custom models and Loras is a bit messy since I simply download model weights from wherever their weights are, upload them to my HuggingFace repo, and get the download links from there. So you kind of need to ask me to add models for the time being until I find a better way or until I document this process in more detail so you can do it yourself.
