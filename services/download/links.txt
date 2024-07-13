@@ -12,3 +12,5 @@ https://huggingface.co/afurkank/img/resolve/main/white_1_0.safetensors
   out=Lora/white_1_0.safetensors
 https://huggingface.co/afurkank/img/resolve/main/detailed_hands-000002.safetensors
   out=Lora/detailed_hands-000002.safetensors
+https://huggingface.co/afurkank/img/resolve/main/Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors
+  out=Stable-diffusion/Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors
