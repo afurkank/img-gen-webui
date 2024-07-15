@@ -63,6 +63,7 @@ HiRes: 4xNMKD-Siax_200k with 3 Steps and 0.35 Denoise + 1.5 Upscale
   - [x] Customizing UI of Automatic1111's **stable-diffusion-webui**
   - [x] Using packages for prompt generation, background removal & Jotform API calls
   - [x] Using Auto's SD web UI as an API
+- [ ] Generated images should open on full screen when clicked
 - [ ] Add negative prompt textbox
 
 # Prompting Resources
