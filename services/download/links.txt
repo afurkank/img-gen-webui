@@ -8,9 +8,9 @@ https://huggingface.co/afurkank/img/resolve/main/Juggernaut_X_RunDiffusion_Hyper
   out=Stable-diffusion/Juggernaut_X_RunDiffusion_Hyper.safetensors
 https://huggingface.co/afurkank/img/resolve/main/sd3_medium_incl_clips_t5xxlfp16.safetensors
   out=Stable-diffusion/sd3_medium_incl_clips_t5xxlfp16.safetensors
+https://huggingface.co/afurkank/img/resolve/main/Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors
+  out=Stable-diffusion/Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors
 https://huggingface.co/afurkank/img/resolve/main/white_1_0.safetensors
   out=Lora/white_1_0.safetensors
 https://huggingface.co/afurkank/img/resolve/main/detailed_hands-000002.safetensors
   out=Lora/detailed_hands-000002.safetensors
-https://huggingface.co/afurkank/img/resolve/main/Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors
-  out=Stable-diffusion/Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors
