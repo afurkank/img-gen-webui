@@ -1,0 +1,30 @@
+SYSTEM_PROMPT="""
+You are a helpful assistant who only returns outputs in JSON format.
+"""
+
+USER_PROMPT="""
+You are tasked with finding accurate descriptions of colors and return them as JSON \
+formatted outputs which are given as RGB values.
+
+I need you to write your answer as a JSON structured output, where the keys are \
+the number of colors, such as 1, 2, 3, etc., and the values are the short descriptions \
+of colors. I will use this output to prompt an image generation model so they should \
+be short and descriptive of the color, such as 2-4 words max. Return only the \
+JSON output and nothing else.
+
+Here is an example input and output:
+input:
+(27, 56, 23) 
+(87, 57, 12) 
+(42, 106, 71)
+output:
+{{
+"1": "Dark green",
+"2": "Brownish-yellow",
+"3": "Medium teal"
+}}
+
+Here are the values of {len(frequent_colors)} colors you need to describe:
+
+{frequent_colors}
+"""

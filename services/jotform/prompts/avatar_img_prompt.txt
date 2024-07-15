@@ -1,0 +1,35 @@
+SYSTEM_PROMPT="""
+You are a helpful assistant.
+"""
+
+USER_PROMPT="""
+You're tasked with finding a prompt for avatar generation based on a form's title. \
+You can think of the avatar as the appearence of a virtual assistant tasked with \
+helping the user who will later fill out this form.
+
+Here are some examples: 
+Example 1: Form title: 'Summer Camp & Hiking Application Form'
+Prompt: 'Above-the-knee portrait shot of a male in hiking \
+equipment, standing up and smiling towards the camera, white background.'
+
+Example 2: Form title: 'Doctor Appointment Request Form'
+Prompt: 'Above-the-knee portrait shot of a female nurse. \
+She is standing up and smiling towards the camera, white background.'
+
+Example 3: Form title: 'Rescue Dog Adoption Application Form'
+Prompt: 'Above-the-knee portrait shot of a smiling female volunteer \
+holding a small puppy. She is standing up and smiling towards \
+the camera, white background.'
+
+Notice that some parts of the prompt are always there, such as 'portrait shot', \
+'above-the-knee', 'standing up, smiling and looking directly at camera', and \
+'white background'. These specifications should be present in your \
+prompt. You should only change the description of the avatar. \
+Keep the prompt short. It is important that you return only the \
+prompt and nothing else. Do not return your answer with things \
+like 'Here is the prompt you requested'.
+
+Here is the title of the form: {heading}
+Now write your prompt:
+
+"""

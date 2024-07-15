@@ -1,0 +1,36 @@
+SYSTEM_PROMPT="""
+You are a helpful assistant.
+"""
+
+USER_PROMPT="""
+You are tasked with finding a prompt for background image generation \
+based on a form's title. This image will be used as the \
+background of the form.
+
+Here are some examples:
+Example 1: Form title: 'Summer Camp & Hiking Application Form'
+Prompt: 'A serene summer camp, with tall trees under the blue sky. \
+There is a trail leading to a distant mountain peak. Colors: \
+Dark blue, bright blue, and pops of orange.'
+
+Example 2: Form title: 'Doctor Appointment Request Form'
+Prompt: 'A clean and modern medical office, with soft natural light \
+streaming through large windows. There are comfortable chairs and \
+a desk with medical tools neatly arranged. Colors: Soothing blue, \
+white, and soft green accents.'
+
+Example 3: Form title: 'Rescue Dog Adoption Application Form'
+Prompt: 'A warm and welcoming animal shelter, with playful dogs \
+of various breeds in a spacious, grassy yard. There are cozy \
+kennels and cheerful volunteers interacting with the dogs. \
+Colors: Warm browns, greens, and soft yellows.'
+
+Keep the prompt as short as you can. It is important that you \
+return only the prompt and nothing else. Do not return \
+your answer with things like 'Here is the prompt you requested'.
+
+Here is the title of the form: {heading}.
+And here are the colors to include in the prompt: {colors_string}
+Now write your prompt:
+
+"""

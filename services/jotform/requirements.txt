@@ -1,0 +1,10 @@
+openai==1.35.4
+Pillow==10.3.0
+groq==0.9.0
+Pylette==2.3.0
+python-dotenv==1.0.1
+flask==3.0.3
+requests==2.32.3
+rembg==2.0.57
+# webcolors==24.6.0
+# python==3.12.4
