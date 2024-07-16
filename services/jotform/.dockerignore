@@ -1,6 +1,0 @@
-.env
-*test.py
-*.yml
-*.md
-Dockerfile
-.*ignore
