@@ -1,5 +1,5 @@
 ***
-![UI](UI.png)
+![UI](ui.png)
 
 # How to Run
 Clone the repo:
