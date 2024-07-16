@@ -6,5 +6,6 @@ python-dotenv==1.0.1
 flask==3.0.3
 requests==2.32.3
 rembg==2.0.57
+gradio==4.37.2
 # webcolors==24.6.0
 # python==3.12.4

@@ -13,7 +13,7 @@ def generate_img(
     
     """ Take image Stable Diffusion parameters and make API call to sd-auto Docker endpoint"""
 
-    url = "http://127.0.0.1:7860"
+    url = "http://0.0.0.0:7860"
 
     # Check for Lora
     use_detailed_hands_lora = kwargs.get('use_detailed_hands_lora', False)
@@ -45,9 +45,9 @@ def generate_img(
     logging.info(f"Payload: {payload}")
 
     response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=payload)
-
+    # print(response)
     r = response.json()
-
+    # print(r)
     response.raise_for_status()
 
     image = r['images'][0]

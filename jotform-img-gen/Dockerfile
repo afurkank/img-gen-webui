@@ -1,4 +1,4 @@
-FROM python:3.8-slim
+FROM python:3.12.4-slim
 
 # Install dependencies
 COPY requirements.txt /app/requirements.txt
@@ -7,6 +7,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app
 
-EXPOSE 5500
+EXPOSE 8080
 
-CMD ["sh", "-c", "python app.py"]
+ENV GRADIO_SERVER_NAME="0.0.0.0"
+
+CMD ["python", "app.py"]

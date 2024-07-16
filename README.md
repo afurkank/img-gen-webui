@@ -6,14 +6,22 @@ Clone the repo:
 
 `git clone https://github.com/afurkank/img-gen-webui.git`
 
-and run:
+and run (from the img-gen-webui directory):
 
 ```
-docker compose --profile download up --build
+docker compose --profile download up --build # force build
 # wait until its done, then:
-docker compose --profile [ui] up --build
-# where [ui] is one of: auto | auto-cpu | comfy | comfy-cpu
+docker compose --profile [ui] up --build -d # force build and run detached
+# where [ui] is one of: auto | auto-cpu
 ```
+
+Then, to run the customized UI for supplying form ID etc., run:
+
+```
+docker build -t jotform-img-gen ./jotform/
+docker run -p 8080:8080 jotform-img-gen
+```
+
 ***
 ### Note
 ***

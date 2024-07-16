@@ -132,4 +132,4 @@ with gr.Blocks(css=css, theme="bethecloud/storj_theme") as demo:
     create_image_generation_tab("avatar")
 
 if __name__ == "__main__":
-    demo.launch(server_port=5555)
+    demo.launch(server_port=8080)
