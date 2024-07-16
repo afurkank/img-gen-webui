@@ -6,7 +6,7 @@ Clone the repo:
 
 `git clone https://github.com/afurkank/img-gen-webui.git`
 
-and run (from inside the *img-gen-webui* directory):
+and run (from inside the **img-gen-webui** directory):
 
 ```
 docker compose --profile download up --build
@@ -18,7 +18,7 @@ docker compose --profile [ui] up --build
 At this point, the SD model weights should be downloaded and Auto's SD web app
 should be accessible by API.
 
-Now, go to *jotform-img-gen* directory and run:
+Now, go to **jotform-img-gen** directory and run:
 
 ```
 python3 app.py
@@ -26,7 +26,7 @@ python3 app.py
 
 And the web app should be available at **http://localhost:8080/**
 
-Do not forget to put your **.env** file containing your API keys as environment variables inside the *jotform-img-gen* folder.
+Do not forget to put your **.env** file containing your API keys as environment variables inside the **jotform-img-gen** folder.
 
 ***
 ### Note
@@ -77,8 +77,8 @@ HiRes: 4xNMKD-Siax_200k with 3 Steps and 0.35 Denoise + 1.5 Upscale
   - [x] Customizing UI of Automatic1111's **stable-diffusion-webui**
   - [x] Using packages for prompt generation, background removal & Jotform API calls
   - [x] Using Auto's SD web UI as an API
-- [ ] Generated images should open on full screen when clicked
 - [ ] Add negative prompt textbox
+- [ ] Test on a machine with GPU
 
 # Prompting Resources
 
