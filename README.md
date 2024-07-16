@@ -18,8 +18,7 @@ docker compose --profile [ui] up --build -d # force build and run detached
 Then, to run the customized UI for supplying form ID etc., run:
 
 ```
-docker build -t jotform-img-gen ./jotform/
-docker run -p 8080:8080 jotform-img-gen
+docker compose -f jotform-img-gen/docker-compose.yml up --build
 ```
 
 ***
