@@ -49,14 +49,15 @@ def create_image_generation_tab(image_type):
                     "sd3_medium_incl_clips_t5xxlfp16",
                     "Juggernaut-XL_v9_RunDiffusionPhoto_v2",
                     "sdxl_lightning_4step",
-                    "sdxl_lightning_8step"
+                    "sdxl_lightning_8step",
+                    "Juggernaut_RunDiffusionPhoto2_Lightning_4Steps"
                 ],
                 value="Juggernaut-XL_v9_RunDiffusionPhoto_v2",
                 label="Image Model"
             )
         with gr.Accordion("Advanced Options", open=False):
             with gr.Row():
-                use_detailed_hands_lora = gr.Checkbox(value=True, label="Detailed Hands Lora")
+                use_detailed_hands_lora = gr.Checkbox(value=False, label="Detailed Hands Lora")
                 use_white_bg_lora = gr.Checkbox(value=False, label="White Background Lora")
                 use_sdxl_lightning_4step_lora = gr.Checkbox(value=False, label="SDXL-Lightning 4 Step Lora")
                 use_sdxl_lightning_8step_lora = gr.Checkbox(value=False, label="SDXL-Lightning 8 Step Lora")

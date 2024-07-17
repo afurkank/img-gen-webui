@@ -7,7 +7,7 @@ import re
 import logging
 
 from utils.jotform_api import get_logo_url
-from utils.inferences import openai_inference
+from utils.llm_inferences import openai_inference
 from utils.prompt_reader import read_prompts_from_file
 
 logging.basicConfig(level=logging.INFO)

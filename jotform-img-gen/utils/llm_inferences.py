@@ -8,14 +8,8 @@ from openai import OpenAI
 
 # Load the .env file
 load_dotenv()
-logging.basicConfig(level=logging.INFO)
 
-# load env variables
-try:
-    groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
-    openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-except ValueError as e:
-    logging.info(str(e))
+logging.basicConfig(level=logging.INFO)
 
 def groq_inference(
         system_prompt: str, 
@@ -25,6 +19,12 @@ def groq_inference(
         temperature: float = 0.8, 
         timeout_seconds: int = 30
     ) -> str:
+
+    try:
+        groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+    except ValueError as e:
+        logging.info(str(e))
+
     model_mapping = {
         'llama3-8b': 'llama3-8b-8192',
         'llama3-70b': 'llama3-70b-8192',
@@ -58,6 +58,12 @@ def openai_inference(system_prompt: str,
         temperature: float = 0.8, 
         timeout_seconds: int = 30
     ) -> str:
+
+    try:
+        openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    except ValueError as e:
+        logging.info(str(e))
+    
     messages = [
         {"role": "system", "content": system_prompt},
         {'role': 'user', 'content': user_prompt}

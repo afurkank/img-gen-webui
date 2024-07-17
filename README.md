@@ -12,19 +12,25 @@ and run (from inside the **img-gen-webui** directory):
 docker compose --profile download up --build
 # wait until its done, then:
 docker compose --profile [ui] up --build
-# where [ui] is one of: auto | auto-cpu | comfy | comfy-cpu
+# where [ui] is one of: auto | auto-cpu
 ```
 
 At this point, the SD model weights should be downloaded and Auto's SD web app
 should be accessible by API.
 
-Now, go to **jotform-img-gen** directory and run:
+Now, go to **jotform-img-gen** directory and run (I suggest you do this inside a Conda environment):
+
+```
+pip install -r requirements.txt
+```
+
+Finally, run:
 
 ```
 python3 app.py
 ```
 
-And the web app should be available at **http://localhost:8080/**
+The web app should be available at **http://localhost:8080/**
 
 Do not forget to put your **.env** file containing your API keys as environment variables inside the **jotform-img-gen** folder.
 

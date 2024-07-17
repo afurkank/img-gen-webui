@@ -4,7 +4,7 @@ from typing import Literal
 from dotenv import load_dotenv
 
 from utils.get_color_palette import get_structured_color_descriptions
-from utils.inferences import groq_inference, openai_inference
+from utils.llm_inferences import groq_inference, openai_inference
 from utils.prompt_reader import read_prompts_from_file
 from utils.jotform_api import get_title
 
