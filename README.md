@@ -49,42 +49,38 @@ Every model has its own settings that it works well with. You can look up their 
 
 ## Juggernaut X Settings
 
+### Recommended Settings for Juggernautv9 RDPhoto2 Lightning 4S
+***
+- Res: 1024 x 1024
+- Sampler: DPM++ SDE or DPM++ SDE Karras
+- Steps: 5-7
+- CFG: 1.5 - 2
+
+No need for "detailed hands lora" as the model can produce good hands.
+
 ### Recommended Settings Normal Version (VAE is baked in):
 ***
-Res: 832*1216 (For Portrait, but any SDXL Res will work fine)
-
-Sampler: DPM++ 2M Karras
-
-Steps: 30-40
-
-CFG: 3-7 (less is a bit more realistic)
-
-HiRes: 4xNMKD-Siax_200k with 15 Steps and 0.3 Denoise + 1.5 Upscale
+- Res: 832*1216 (For Portrait, but any SDXL Res will work fine)
+- Sampler: DPM++ 2M Karras
+- Steps: 30-40
+- CFG: 3-7 (less is a bit more realistic)
+- HiRes: 4xNMKD-Siax_200k with 15 Steps and 0.3 Denoise + 1.5 Upscale
 
 ### Recommended Settings Hyper Version (VAE is baked in):
 ***
-
-Res: 832*1216 (Any SDXL Res will work fine)
-
-Sampler: DPM++ SDE Karras
-
-Steps: 4-6
-
-CFG: 1-2 (recommend 2 for a bit negative prompt affection)
-Negative: Only working slightly on CFG 2
-
-HiRes: 4xNMKD-Siax_200k with 3 Steps and 0.35 Denoise + 1.5 Upscale
+- Res: 832*1216 (Any SDXL Res will work fine)
+- Sampler: DPM++ SDE Karras
+- Steps: 4-6
+- CFG: 1-2 (recommend 2 for a bit negative prompt affection)
+- Negative: Only working slightly on CFG 2
+- HiRes: 4xNMKD-Siax_200k with 3 Steps and 0.35 Denoise + 1.5 Upscale
 
 ## SDXL-Lightning Settings:
 ***
-
-Res: 1024x1024
-
-Sampler: Euler - SGM Uniform
-
-Steps: 4 or 8 (depending on the model which can be sdxl-lightning-4step or sdxl-lightning-8step)
-
-CFG: 1
+- Res: 1024x1024
+- Sampler: Euler - SGM Uniform
+- Steps: 4 or 8 (depending on the model which can be sdxl-lightning-4step or sdxl-lightning-8step)
+- CFG: 1
 
 # ToDo
 
@@ -94,7 +90,6 @@ CFG: 1
   - [x] Customizing UI of Automatic1111's **stable-diffusion-webui**
   - [x] Using packages for prompt generation, background removal & Jotform API calls
   - [x] Using Auto's SD web UI as an API
-- [ ] Add negative prompt textbox
 - [ ] Test on a machine with GPU
 
 # Prompting Resources
