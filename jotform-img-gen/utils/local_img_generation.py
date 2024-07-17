@@ -18,6 +18,8 @@ def generate_img(
     # Check for Lora
     use_detailed_hands_lora = kwargs.get('use_detailed_hands_lora', False)
     use_white_bg_lora = kwargs.get('use_white_bg_lora', False)
+    use_sdxl_lightning_4step_lora = kwargs.get('use_4step_lora', False)
+    use_sdxl_lightning_8step_lora = kwargs.get('use_8step_lora', False)
 
     if use_detailed_hands_lora:
         prompt += " <lora:detailed_hands:1>" # you can change 1, it needs to be between 0-1
@@ -25,6 +27,10 @@ def generate_img(
     if use_white_bg_lora:
         prompt += " <lora:white_1_0:1>" # you can change 1, it needs to be between 0-1
         logging.info("Using 'White Background Lora'")
+    if use_sdxl_lightning_4step_lora:
+        prompt += " <lora:sdxl_lightning_4step_lora:1>"
+    if use_sdxl_lightning_8step_lora:
+        prompt += " <lora:sdxl_lightning_8step_lora:1>"
 
     payload = {
         "prompt": prompt,

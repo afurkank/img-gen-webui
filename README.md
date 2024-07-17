@@ -55,7 +55,7 @@ CFG: 3-7 (less is a bit more realistic)
 
 HiRes: 4xNMKD-Siax_200k with 15 Steps and 0.3 Denoise + 1.5 Upscale
 
-### Recommended Setting Hyper Version (VAE is baked in):
+### Recommended Settings Hyper Version (VAE is baked in):
 ***
 
 Res: 832*1216 (Any SDXL Res will work fine)
@@ -68,6 +68,17 @@ CFG: 1-2 (recommend 2 for a bit negative prompt affection)
 Negative: Only working slightly on CFG 2
 
 HiRes: 4xNMKD-Siax_200k with 3 Steps and 0.35 Denoise + 1.5 Upscale
+
+## SDXL-Lightning Settings:
+***
+
+Res: 1024x1024
+
+Sampler: Euler - SGM Uniform
+
+Steps: 4 or 8 (depending on the model which can be sdxl-lightning-4step or sdxl-lightning-8step)
+
+CFG: 1
 
 # ToDo
 
