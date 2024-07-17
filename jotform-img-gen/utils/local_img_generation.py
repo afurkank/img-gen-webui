@@ -1,6 +1,7 @@
 import logging
 import base64
 import requests
+import json
 
 logging.basicConfig(level=logging.INFO)
 
@@ -57,7 +58,11 @@ def generate_img(
     response.raise_for_status()
 
     image = r['images'][0]
+    info:str = r['info'] # string of dictionary containing parameters and generation info
+
+    #info = info.strip('\\')
     
     image_bytes = base64.b64decode(image)
+    info_json = json.loads(info)
 
-    return image_bytes
+    return image_bytes, info#_json
