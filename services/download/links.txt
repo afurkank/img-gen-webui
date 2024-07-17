@@ -33,3 +33,6 @@ https://huggingface.co/afurkank/img/resolve/main/white_1_0.safetensors
 
 https://huggingface.co/afurkank/img/resolve/main/detailed_hands-000002.safetensors
   out=Lora/detailed_hands-000002.safetensors
+
+https://huggingface.co/afurkank/img/resolve/main/Juggernaut_RunDiffusionPhoto2_Lightning_4Steps.safetensors
+  out=Stable-diffusion/Juggernaut_RunDiffusionPhoto2_Lightning_4Steps.safetensors
