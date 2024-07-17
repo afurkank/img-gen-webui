@@ -48,6 +48,8 @@ def create_image_generation_tab(image_type):
                     "Juggernaut_X_RunDiffusion_Hyper",
                     "sd3_medium_incl_clips_t5xxlfp16",
                     "Juggernaut-XL_v9_RunDiffusionPhoto_v2",
+                    "sdxl_lightning_4step",
+                    "sdxl_lightning_8step"
                 ],
                 value="Juggernaut-XL_v9_RunDiffusionPhoto_v2",
                 label="Image Model"
@@ -56,10 +58,12 @@ def create_image_generation_tab(image_type):
             with gr.Row():
                 use_detailed_hands_lora = gr.Checkbox(value=True, label="Detailed Hands Lora")
                 use_white_bg_lora = gr.Checkbox(value=False, label="White Background Lora")
+                use_sdxl_lightning_4step_lora = gr.Checkbox(value=False, label="SDXL-Lightning 4 Step Lora")
+                use_sdxl_lightning_8step_lora = gr.Checkbox(value=False, label="SDXL-Lightning 8 Step Lora")
 
             with gr.Row():
-                img_width = gr.Dropdown(["512", "832"], value="832", label="Image Width")
-                img_height = gr.Dropdown(["512", "1216"], value="1216", label="Image Height")
+                img_width = gr.Slider(minimum=64, maximum=2048, value="512", label="Image Width")
+                img_height = gr.Slider(minimum=64, maximum=2048, value="512", label="Image Height")
                 sampling_method = gr.Dropdown(
                     ["DPM++ 2M", "DPM++ SDE", "DPM++ 2M SDE", "DPM++ 2M SDE Heun", "DPM++ 2S a",
                     "DPM++ 3M SDE", "Euler a", "Euler", "LMS", "Heun", "DPM2", "DPM2 a", "DPM fast",
@@ -103,6 +107,8 @@ def create_image_generation_tab(image_type):
                     'sampling_steps': sampling_steps,
                     'use_detailed_hands_lora': use_detailed_hands_lora.value,
                     'use_white_bg_lora': use_white_bg_lora.value,
+                    'use_4step_lora': use_sdxl_lightning_4step_lora.value,
+                    'use_8step_lora': use_sdxl_lightning_8step_lora.value,
                 }
                 image, error = generate_image(image_type, img_model, prompt, negative_prompt, **parameters)
                 return [image] if image else None, error
@@ -119,13 +125,23 @@ def create_image_generation_tab(image_type):
             outputs=[output_gallery, error_output]
         )
 css = '''
-.gradio-container{max-width: 670px !important}
+.gradio-container{max-width: 1000px !important}
 h1{text-align:center}
 .clickable-image img {
     cursor: pointer;
 }
 '''
-with gr.Blocks(css=css, theme="bethecloud/storj_theme") as demo:
+js_func = """
+function refresh() {
+    const url = new URL(window.location);
+
+    if (url.searchParams.get('__theme') !== 'dark') {
+        url.searchParams.set('__theme', 'dark');
+        window.location.href = url.href;
+    }
+}
+"""
+with gr.Blocks(css=css, js=js_func, theme="bethecloud/storj_theme") as demo:
     gr.Markdown("# AI Background and Avatar Generator")
     
     create_image_generation_tab("background")
