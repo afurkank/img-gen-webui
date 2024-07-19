@@ -1,3 +1,10 @@
+I have a simple web app written in Python using Gradio and my own implemented functions. 
+Using this app, the user can supply their online form's id an get a background or avatar 
+image that is generated using image generation models.
+
+Here is the content of the "app.py" file:
+
+```
 import gradio as gr
 from utils.prompt_constructor import get_prompt_for_image_gen
 from utils.local_img_generation import generate_img
@@ -199,3 +206,22 @@ with gr.Blocks(css=css, js=js_func, theme="bethecloud/storj_theme") as demo:
 
 if __name__ == "__main__":
     demo.launch(server_port=8080)
+```
+
+However, there is a small problem: before the image bytes are given to gr.State(), I can print and see them, however, after they are given to gr.State() here:
+
+```
+generate_button.click(
+            _generate_prompt,
+            inputs=[gr.Textbox(value=image_type, visible=False), form_id, prompt, llm_model],
+            outputs=[output_prompt, info_output]
+        ).then(
+            _generate_image,
+            inputs=[gr.Textbox(value=image_type, visible=False), img_model, output_prompt, negative_prompt,
+                    img_width, img_height, sampling_method, schedule_type, batch_count, batch_size,
+                    cfg_scale, seed, sampling_steps],
+            outputs=[output_image, info_output, gr.State(), info_output, rating_row, log_row]
+        )
+```
+
+when I print the image_bytes I see 'None'. What is the problem?

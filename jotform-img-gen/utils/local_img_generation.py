@@ -2,6 +2,8 @@ import logging
 import base64
 import requests
 import json
+import ast
+from typing import Tuple
 
 logging.basicConfig(level=logging.INFO)
 
@@ -10,7 +12,7 @@ def generate_img(
         prompt: str,
         negative_prompt: str,
         **kwargs
-    ) -> bytes:
+    ):
     
     """ Take image Stable Diffusion parameters and make API call to sd-auto Docker endpoint"""
 
@@ -30,8 +32,10 @@ def generate_img(
         logging.info("Using 'White Background Lora'")
     if use_sdxl_lightning_4step_lora:
         prompt += " <lora:sdxl_lightning_4step_lora:1>"
+        logging.info("Using 'SDXL-Lightning 4Step Lora'")
     if use_sdxl_lightning_8step_lora:
         prompt += " <lora:sdxl_lightning_8step_lora:1>"
+        logging.info("Using 'SDXL-Lightning 8Step Lora'")
 
     payload = {
         "prompt": prompt,
@@ -61,6 +65,5 @@ def generate_img(
     info:str = r['info'] # string of dictionary containing parameters and generation info
     
     image_bytes = base64.b64decode(image)
-    info_json = json.loads(info)
 
-    return image_bytes, info_json
+    return image_bytes, info#_json
