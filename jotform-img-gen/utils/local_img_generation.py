@@ -1,8 +1,6 @@
 import logging
 import base64
 import requests
-import json
-import ast
 from typing import Tuple
 
 logging.basicConfig(level=logging.INFO)
@@ -12,7 +10,7 @@ def generate_img(
         prompt: str,
         negative_prompt: str,
         **kwargs
-    ):
+    ) -> Tuple[bytes, str]:
     
     """ Take image Stable Diffusion parameters and make API call to sd-auto Docker endpoint"""
 
@@ -66,4 +64,4 @@ def generate_img(
     
     image_bytes = base64.b64decode(image)
 
-    return image_bytes, info#_json
+    return image_bytes, info

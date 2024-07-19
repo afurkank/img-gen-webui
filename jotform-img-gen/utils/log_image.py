@@ -1,14 +1,12 @@
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-from googleapiclient.http import MediaFileUpload, MediaIoBaseUpload
+from googleapiclient.http import MediaIoBaseUpload
 
-import pandas as pd
 import io
 import os
 import logging
 import json
-import ast
 
 logging.basicConfig(level=logging.INFO)
 

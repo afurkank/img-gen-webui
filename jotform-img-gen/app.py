@@ -133,7 +133,7 @@ def create_image_generation_tab(image_type):
             pil_image, info, image_bytes = generate_image(image_type, img_model, prompt, negative_prompt, **parameters)
             
             if pil_image is not None:
-                return pil_image, info, image_bytes, gr.update(visible=True), gr.update(visible=True), gr.update(visible=True)
+                return pil_image, info, image_bytes, gr.update(visible=False), gr.update(visible=True), gr.update(visible=True) # change the 1st gr.update to make info visible
             else:
                 return None, info, None, gr.update(visible=False), gr.update(visible=False), gr.update(visible=False)
 
