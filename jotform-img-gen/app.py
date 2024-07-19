@@ -106,6 +106,8 @@ def create_image_generation_tab(image_type):
                 with gr.Row(visible=False) as success_row:
                     success_text = gr.Textbox(label="Logging Status", placeholder="", interactive=False)
 
+        image_bytes_state = gr.State(None)
+
         def _generate_prompt(image_type, form_id, prompt, llm_model):
             generated_prompt, error = generate_prompt(image_type, form_id, prompt, llm_model)
             return generated_prompt, error
@@ -129,8 +131,7 @@ def create_image_generation_tab(image_type):
                 'use_8step_lora': use_sdxl_lightning_8step_lora.value,
             }
             pil_image, info, image_bytes = generate_image(image_type, img_model, prompt, negative_prompt, **parameters)
-            print(image_bytes)
-            print("-"*20)
+            
             if pil_image is not None:
                 return pil_image, info, image_bytes, gr.update(visible=True), gr.update(visible=True), gr.update(visible=True)
             else:
@@ -153,6 +154,26 @@ def create_image_generation_tab(image_type):
             except Exception as e:
                 return gr.update(value=f"Error logging image: {str(e)}", visible=True)
 
+        def _log_image(image_bytes, rating, info):
+            """
+            Takes in image bytes, rating, and JSON formatted generation info.
+
+            Returns a string indicating whether or not the logging was successful
+            Updates the visibility of log_result text box
+            """
+            if image_bytes is None:
+                return gr.update(value="No image to log. Please generate an image first.", visible=True)
+            
+            image_name = json.loads(info.replace("\n", "\\n")).get('job_timestamp')
+            if rating is None or rating < 1 or rating > 10:
+                return gr.update(value="Please provide a valid rating between 1 and 10 before logging.", visible=True)
+            
+            try:
+                log_result = log_image(image_bytes, image_name, rating, info)
+                return gr.update(value=log_result, visible=True)
+            except Exception as e:
+                return gr.update(value=f"Error logging image: {str(e)}", visible=True)
+
         generate_button.click(
             _generate_prompt,
             inputs=[gr.Textbox(value=image_type, visible=False), form_id, prompt, llm_model],
@@ -162,12 +183,12 @@ def create_image_generation_tab(image_type):
             inputs=[gr.Textbox(value=image_type, visible=False), img_model, output_prompt, negative_prompt,
                     img_width, img_height, sampling_method, schedule_type, batch_count, batch_size,
                     cfg_scale, seed, sampling_steps],
-            outputs=[output_image, info_output, gr.State(), info_output, rating_row, log_row]
+            outputs=[output_image, info_output, image_bytes_state, info_output, rating_row, log_row]
         )
 
         log_button.click(
             _log_image,
-            inputs=[gr.State(), rating, info_output],
+            inputs=[image_bytes_state, rating, info_output],
             outputs=[success_text]
         ).then(
             lambda: gr.update(visible=True),

@@ -32,11 +32,8 @@ creds = Credentials.from_service_account_file(
 )
 
 def upload_image_bytes_to_drive(drive_service, image_bytes, image_name, folder_id, mime_type='image/png'):
-    print(image_bytes)
-    with open("kitten_kitty.png", "wb") as f:
-        f.write(image_bytes)
-    
     image_name += '.png'
+
     file_metadata = {'name': image_name}
     if folder_id:
         file_metadata['parents'] = [folder_id]
@@ -94,11 +91,11 @@ def append_image_to_sheet(sheets_service, drive_service, sheet_id, sheet_name, i
         row_data[headers.index('Height')] = info.get('height', '')
         row_data[headers.index('Sampler Name')] = info.get('sampler_name', '')
         row_data[headers.index('CFG Scale')] = info.get('cfg_scale', '')
-        row_data[headers.index('Steps')] = info.get('steps', '')
+        row_data[headers.index('Sampling Steps')] = info.get('steps', '')
         row_data[headers.index('SD Model Name')] = info.get('sd_model_name', '')
         
         extra_params = info.get('extra_generation_params', {})
-        row_data[headers.index('Schedule Type')] = extra_params.get('Schedule_type', '')
+        row_data[headers.index('Schedule Type')] = extra_params.get('Schedule type', '')
 
         # Append the data to the sheet
         body = {
