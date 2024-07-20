@@ -1,11 +1,12 @@
+import json
+import PIL.Image
 import gradio as gr
+
 from utils.prompt_constructor import get_prompt_for_image_gen
 from utils.local_img_generation import generate_img
 from utils.remove_bg import get_bg_removed_img
 from utils.log_image import log_image
 from io import BytesIO
-import PIL.Image
-import json
 
 def generate_prompt(image_type, form_id, prompt, llm_model):
     if prompt:
@@ -30,8 +31,8 @@ def generate_image(image_type, img_model, prompt, negative_prompt, **kwargs):
     """
     try:
         image_bytes, info = generate_img(img_model, prompt, negative_prompt, **kwargs)
-        if image_type == 'avatar':
-            image_bytes, info = get_bg_removed_img(image_bytes=image_bytes)
+        # if image_type == 'avatar':
+        #     image_bytes, info = get_bg_removed_img(image_bytes=image_bytes)
 
         img = PIL.Image.open(BytesIO(image_bytes))
         return img, info, image_bytes
@@ -167,7 +168,7 @@ def create_image_generation_tab(image_type):
             image_name = json.loads(info.replace("\n", "\\n")).get('job_timestamp')
             if rating is None or rating < 1 or rating > 10:
                 return gr.update(value="Please provide a valid rating between 1 and 10 before logging.", visible=True)
-            
+
             try:
                 log_result = log_image(image_bytes, image_name, rating, info)
                 return gr.update(value=log_result, visible=True)
