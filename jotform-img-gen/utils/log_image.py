@@ -7,8 +7,11 @@ import io
 import os
 import logging
 import json
+from dotenv import load_dotenv
 
 logging.basicConfig(level=logging.INFO)
+
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
 
 def find_file(filename):
     for root, dirs, files in os.walk('.'):
@@ -16,18 +19,20 @@ def find_file(filename):
             return os.path.join(os.path.abspath(root), filename)
     return None
 
-# Define constants
-FOLDER_ID = "1oHyGGix-jLUVO_mbiOLXfCY7k4i2jIPO"
-SHEET_NAME = "Logs"
-SHEET_ID = "1zndzuJQ8Uon6I9QO8zM-J2UF4fK1iGyai0STlwTUNVQ"
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
-SERVICE_ACCOUNT_FILE = find_file('sd-logs-429806-2c7f160953be.json')
+def load_env_variables():
+    # load env variables
+    load_dotenv()
 
-# Use service account credentials
-creds = Credentials.from_service_account_file(
-    SERVICE_ACCOUNT_FILE,
-    scopes=SCOPES
-)
+    # assign env variables
+    try:
+        FOLDER_ID = os.getenv("FOLDER_ID")
+        SHEET_NAME = os.getenv("SHEET_NAME")
+        SHEET_ID = os.getenv("SHEET_ID")
+        SERVICE_ACCOUNT_FILE = find_file(str(os.getenv("SERVICE_ACCOUNT_FILE")))
+
+        return (FOLDER_ID, SHEET_NAME, SHEET_ID, SERVICE_ACCOUNT_FILE)
+    except ValueError as e:
+        logging.info(str(e))
 
 def upload_image_bytes_to_drive(drive_service, image_bytes, image_name, folder_id, mime_type='image/png'):
     image_name += '.png'
@@ -39,16 +44,18 @@ def upload_image_bytes_to_drive(drive_service, image_bytes, image_name, folder_i
     file = drive_service.files().create(body=file_metadata, media_body=media, fields='id').execute()
     return file.get('id')
 
-def append_image_to_sheet(sheets_service, drive_service, sheet_id, sheet_name, image_bytes, image_name, rating, info):
+def append_image_to_sheet(sheets_service, drive_service, sheet_id, sheet_name, image_bytes, image_name, rating, info, folder_id):
     info = json.loads(info.replace("\n", "\\n"))
     assert type(info) == dict, f"info must be of type dict not {type(info)}"
 
     try:
         # Get the current data in the sheet
+        print("got here 1")
         result = sheets_service.spreadsheets().values().get(
             spreadsheetId=sheet_id,
             range=f'{sheet_name}'
         ).execute()
+        print("got here 2")
         current_data = result.get('values', [])
         
         # Define all required columns
@@ -73,7 +80,7 @@ def append_image_to_sheet(sheets_service, drive_service, sheet_id, sheet_name, i
         next_row = len(current_data) + 1
 
         # Upload image to Drive
-        image_id = upload_image_bytes_to_drive(drive_service, image_bytes, image_name, folder_id=FOLDER_ID)
+        image_id = upload_image_bytes_to_drive(drive_service, image_bytes, image_name, folder_id=folder_id)
         
         # Create IMAGE formula
         image_formula = f"""=IMAGE("https://drive.google.com/uc?export=view&id={image_id}", 4, 300, 300)"""
@@ -172,16 +179,23 @@ def get_sheet_id(sheets_service, sheet_id, sheet_name):
         logging.info(f"An error occurred while getting sheet ID: {err}")
         return None
 
-def log_image(image_bytes: bytes, image_name: str, rating: float, info,
-              folder_id: str=FOLDER_ID, sheet_name: str=SHEET_NAME, 
-              sheet_id: str=SHEET_ID, service_acc_file: str=SERVICE_ACCOUNT_FILE):
+def log_image(image_bytes: bytes, image_name: str, rating: float, info):
+    folder_id, sheet_id, sheet_name, service_account_file = load_env_variables()
+    print(folder_id, sheet_id, sheet_name, service_account_file)
+
+    # Use service account credentials
+    creds = Credentials.from_service_account_file(
+        service_account_file,
+        scopes=SCOPES
+    )
+
     try:
         # Create Google Sheets and Drive service
         sheets_service = build('sheets', 'v4', credentials=creds)
         drive_service = build('drive', 'v3', credentials=creds)
 
         # Append the image and data to the sheet
-        append_image_to_sheet(sheets_service, drive_service, SHEET_ID, SHEET_NAME, image_bytes, image_name, rating, info)
+        append_image_to_sheet(sheets_service, drive_service, sheet_id, sheet_name, image_bytes, image_name, rating, info, folder_id)
 
         return "The image and associated data were successfully logged."
 
