@@ -50,12 +50,11 @@ def append_image_to_sheet(sheets_service, drive_service, sheet_id, sheet_name, i
 
     try:
         # Get the current data in the sheet
-        print("got here 1")
         result = sheets_service.spreadsheets().values().get(
             spreadsheetId=sheet_id,
             range=f'{sheet_name}'
         ).execute()
-        print("got here 2")
+        
         current_data = result.get('values', [])
         
         # Define all required columns
@@ -180,8 +179,7 @@ def get_sheet_id(sheets_service, sheet_id, sheet_name):
         return None
 
 def log_image(image_bytes: bytes, image_name: str, rating: float, info):
-    folder_id, sheet_id, sheet_name, service_account_file = load_env_variables()
-    print(folder_id, sheet_id, sheet_name, service_account_file)
+    folder_id, sheet_name, sheet_id, service_account_file = load_env_variables()
 
     # Use service account credentials
     creds = Credentials.from_service_account_file(
