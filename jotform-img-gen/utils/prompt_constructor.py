@@ -3,7 +3,6 @@ import logging
 from typing import Literal
 from dotenv import load_dotenv
 
-
 from utils.get_color_palette import get_structured_color_descriptions
 from utils.llm_inferences import groq_inference, openai_inference
 from utils.prompt_reader import read_prompts_from_file
@@ -49,14 +48,21 @@ def get_prompt_for_image_gen(
 
     # Get colors of the logo
     colors = get_structured_color_descriptions(form_id=form_id, prompt_file_path="prompts/color_palette_prompt.txt")
-    colors_json = json.loads(colors)
-    colors_string = ", ".join(colors_json.values())
+    if colors:
+        colors_json = json.loads(colors)
+        colors_string = ", ".join(colors_json.values())
 
-    logging.info(f"Color descriptions of logo: {colors_string}")
+        logging.info(f"Color descriptions of logo: {colors_string}")
 
-    # Read pre-defined prompt
-    # either 'avatar image' or 'background image' prompt file can be used here
-    system_prompt, user_prompt = read_prompts_from_file(file_path=prompt_file_path, heading=heading, colors_string=colors_string, len=len)
+        # Read pre-defined prompt
+        # either 'avatar image' or 'background image' prompt file can be used here
+        system_prompt, user_prompt = read_prompts_from_file(file_path=prompt_file_path, heading=heading, colors_string=colors_string, len=len)
+    else:
+        # logo form doesn't exist, so we cannot extract colors
+        # we read the prompt that doesn't require colors as input
+        prompt_file_name = prompt_file_path.split('.')[0]
+        new_file_path = prompt_file_name + '_wo_color' + '.txt'
+        system_prompt, user_prompt = read_prompts_from_file(file_path=new_file_path, heading=heading, len=len)
 
     # Get prompt via LLM for image generation
     try:
