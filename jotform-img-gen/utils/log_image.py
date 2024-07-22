@@ -44,7 +44,9 @@ def upload_image_bytes_to_drive(drive_service, image_bytes, image_name, folder_i
     file = drive_service.files().create(body=file_metadata, media_body=media, fields='id').execute()
     return file.get('id')
 
-def append_image_to_sheet(sheets_service, drive_service, sheet_id, sheet_name, image_bytes, image_name, rating, info, folder_id):
+def append_image_to_sheet(sheets_service, drive_service, sheet_id, sheet_name, 
+                          image_bytes, image_name, rating, info, folder_id,
+                          ):
     info = json.loads(info.replace("\n", "\\n"))
     assert type(info) == dict, f"info must be of type dict not {type(info)}"
 
@@ -58,8 +60,9 @@ def append_image_to_sheet(sheets_service, drive_service, sheet_id, sheet_name, i
         current_data = result.get('values', [])
         
         # Define all required columns
-        required_columns = ['Image', 'Rating', 'Prompt', 'Negative Prompt', 'Seed', 'Width', 'Height', 
-                            'Sampler Name', 'CFG Scale', 'Steps', 'SD Model Name', 'Schedule Type']
+        required_columns = ['SD Model Name', 'Prompt', 'Negative Prompt', 'Sampling Steps',
+                            'Sampler Name', 'Schedule Type', 'Width', 'Height', 'CFG Scale', 
+                            'Seed', 'Image', 'Rating', 'Image Link']
         
         # Create or update headers
         headers = current_data[0] if current_data else []
@@ -81,8 +84,11 @@ def append_image_to_sheet(sheets_service, drive_service, sheet_id, sheet_name, i
         # Upload image to Drive
         image_id = upload_image_bytes_to_drive(drive_service, image_bytes, image_name, folder_id=folder_id)
         
+        # Drive link
+        drive_link = f"https://drive.google.com/uc?export=view&id={image_id}"
+
         # Create IMAGE formula
-        image_formula = f"""=IMAGE("https://drive.google.com/uc?export=view&id={image_id}", 4, 300, 300)"""
+        image_formula = f"""=IMAGE("{drive_link}", 4, 300, 300)"""
         
         # Prepare the row data
         row_data = [''] * len(headers)
@@ -97,6 +103,7 @@ def append_image_to_sheet(sheets_service, drive_service, sheet_id, sheet_name, i
         row_data[headers.index('CFG Scale')] = info.get('cfg_scale', '')
         row_data[headers.index('Sampling Steps')] = info.get('steps', '')
         row_data[headers.index('SD Model Name')] = info.get('sd_model_name', '')
+        row_data[headers.index('Image Link')] = drive_link
         
         extra_params = info.get('extra_generation_params', {})
         row_data[headers.index('Schedule Type')] = extra_params.get('Schedule type', '')
@@ -178,7 +185,12 @@ def get_sheet_id(sheets_service, sheet_id, sheet_name):
         logging.info(f"An error occurred while getting sheet ID: {err}")
         return None
 
-def log_image(image_bytes: bytes, image_name: str, rating: float, info):
+def log_image(
+        image_bytes: bytes, 
+        image_name: str, 
+        rating: float, 
+        info: str,
+    ):
     folder_id, sheet_name, sheet_id, service_account_file = load_env_variables()
 
     # Use service account credentials
@@ -193,7 +205,9 @@ def log_image(image_bytes: bytes, image_name: str, rating: float, info):
         drive_service = build('drive', 'v3', credentials=creds)
 
         # Append the image and data to the sheet
-        append_image_to_sheet(sheets_service, drive_service, sheet_id, sheet_name, image_bytes, image_name, rating, info, folder_id)
+        append_image_to_sheet(sheets_service, drive_service, sheet_id, 
+                              sheet_name, image_bytes, image_name, rating, 
+                              info, folder_id)
 
         return "The image and associated data were successfully logged."
 
