@@ -46,6 +46,7 @@ def upload_image_bytes_to_drive(drive_service, image_bytes, image_name, folder_i
 
 def append_image_to_sheet(sheets_service, drive_service, sheet_id, sheet_name, 
                           image_bytes, image_name, rating, info, folder_id,
+                          user,
                           ):
     info = json.loads(info.replace("\n", "\\n"))
     assert type(info) == dict, f"info must be of type dict not {type(info)}"
@@ -58,11 +59,14 @@ def append_image_to_sheet(sheets_service, drive_service, sheet_id, sheet_name,
         ).execute()
         
         current_data = result.get('values', [])
+        is_empty_sheet = False
+        if not current_data: # empty sheet, adjust row index
+            is_empty_sheet = True
         
         # Define all required columns
         required_columns = ['SD Model Name', 'Prompt', 'Negative Prompt', 'Sampling Steps',
                             'Sampler Name', 'Schedule Type', 'Width', 'Height', 'CFG Scale', 
-                            'Seed', 'Image', 'Rating', 'Image Link']
+                            'Seed', 'Image', 'Rating', 'User', 'Image Link']
         
         # Create or update headers
         headers = current_data[0] if current_data else []
@@ -104,7 +108,8 @@ def append_image_to_sheet(sheets_service, drive_service, sheet_id, sheet_name,
         row_data[headers.index('Sampling Steps')] = info.get('steps', '')
         row_data[headers.index('SD Model Name')] = info.get('sd_model_name', '')
         row_data[headers.index('Image Link')] = drive_link
-        
+        row_data[headers.index('User')] = user
+
         extra_params = info.get('extra_generation_params', {})
         row_data[headers.index('Schedule Type')] = extra_params.get('Schedule type', '')
 
@@ -120,17 +125,23 @@ def append_image_to_sheet(sheets_service, drive_service, sheet_id, sheet_name,
         ).execute()
         
         # Adjust row height and column width for the image
-        adjust_cell_size(sheets_service, sheet_id, sheet_name, next_row, headers.index('Image'))
+        adjust_cell_size(sheets_service=sheets_service, sheet_id=sheet_id, 
+                         sheet_name=sheet_name, row_index=next_row, 
+                         column_index=headers.index('Image'),
+                         is_empty_sheet=is_empty_sheet
+        )
 
         logging.info(f"Data appended to row {next_row}. {result.get('updates').get('updatedCells')} cells updated.")
     except HttpError as err:
         logging.info(f"An error occurred: {err}")
 
-def adjust_cell_size(sheets_service, sheet_id, sheet_name, row_index, column_index):
+def adjust_cell_size(sheets_service, sheet_id, sheet_name, row_index, column_index, is_empty_sheet):
     try:
         # Set row height and column width (adjust the size as needed)
         row_height = 300  # in pixels
         column_width = 300  # in pixels
+
+        row_index += 1 if is_empty_sheet else 0
         
         requests = [
             {
@@ -190,6 +201,7 @@ def log_image(
         image_name: str, 
         rating: float, 
         info: str,
+        user: str
     ):
     folder_id, sheet_name, sheet_id, service_account_file = load_env_variables()
 
@@ -207,7 +219,7 @@ def log_image(
         # Append the image and data to the sheet
         append_image_to_sheet(sheets_service, drive_service, sheet_id, 
                               sheet_name, image_bytes, image_name, rating, 
-                              info, folder_id)
+                              info, folder_id, user)
 
         return "The image and associated data were successfully logged."
 

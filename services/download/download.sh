@@ -20,9 +20,9 @@ aria2c -x 10 --disable-ipv6 --input-file /docker/links.txt --dir /data/models --
 #echo "Downloading custom model weights from Civitai..."
 #wget -P /data/models/Stable-diffusion https://civitai.com/api/download/models/471120
 
-echo "Checking SHAs..."
+# echo "Checking SHAs..."
 
-parallel --will-cite -a /docker/checksums.sha256 "echo -n {} | sha256sum -c"
+# parallel --will-cite -a /docker/checksums.sha256 "echo -n {} | sha256sum -c"
 
 cat <<EOF
 By using this software, you agree to the following licenses:

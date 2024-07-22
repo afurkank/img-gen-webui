@@ -85,7 +85,7 @@ def create_image_generation_tab(image_type):
                         sampling_steps = gr.Slider(minimum=1, maximum=150, value=1, step=1, label="Sampling steps")
                         batch_count = gr.Slider(minimum=1, maximum=100, value=1, step=1, label="Batch count")
                         batch_size = gr.Slider(minimum=1, maximum=8, value=1, step=1, label="Batch size")
-                        seed = gr.Number(value=-1, minimum=-1, label="Seed")
+                        seed = gr.Number(value=-1, minimum=-1, precision=0, step=1, label="Seed")
                     with gr.Row():
                         use_detailed_hands_lora = gr.Checkbox(value=False, label="Detailed Hands Lora")
                         use_white_bg_lora = gr.Checkbox(value=False, label="White Background Lora")
@@ -101,7 +101,9 @@ def create_image_generation_tab(image_type):
                 with gr.Row():
                     info_output = gr.Textbox(label="Generation Info", visible=False)
                 with gr.Row(visible=False) as rating_row:
-                    rating = gr.Number(label="Image Rating (1-10)", minimum=1, maximum=10, step=0.5, value=5, interactive=True)
+                    rating = gr.Slider(label="Image Rating (1-10)", minimum=1, maximum=10, step=0.5, value=5, interactive=True)
+                with gr.Row(visible=False) as user_row:
+                    user = gr.Dropdown(choices=['Burak', 'Çağlar', 'Furkan', 'Esra', 'Melike'], value='Furkan', label='User')
                 with gr.Row(visible=False) as log_row:
                     log_button = gr.Button("Log the image and its rating", size='sm')
                 with gr.Row(visible=False) as success_row:
@@ -134,28 +136,11 @@ def create_image_generation_tab(image_type):
             pil_image, info, image_bytes = generate_image(image_type, img_model, prompt, negative_prompt, **parameters)
             
             if pil_image is not None:
-                return pil_image, info, image_bytes, gr.update(visible=False), gr.update(visible=True), gr.update(visible=True) # change the 1st gr.update to make info visible
+                return pil_image, info, image_bytes, gr.update(visible=False), gr.update(visible=True), gr.update(visible=True), gr.update(visible=True) # change the 1st gr.update to make info visible
             else:
-                return None, info, None, gr.update(visible=False), gr.update(visible=False), gr.update(visible=False)
+                return None, info, None, gr.update(visible=False), gr.update(visible=False), gr.update(visible=False), gr.update(visible=False)
 
-        def _log_image(image_bytes, rating, info):
-            image_name = json.loads(info.replace("\n", "\\n")).get('job_timestamp')
-            """
-            Takes in image bytes, rating, and JSON formatted generation info.
-
-            Returns a string indicating whether or not the logging was successful
-            Updates the visibility of log_result text box
-            """
-            if rating is None or rating < 1 or rating > 10:
-                return gr.update(value="Please provide a valid rating between 1 and 10 before logging.", visible=True)
-            
-            try:
-                log_result = log_image(image_bytes, image_name, rating, info)
-                return gr.update(value=log_result, visible=True)
-            except Exception as e:
-                return gr.update(value=f"Error logging image: {str(e)}", visible=True)
-
-        def _log_image(image_bytes, rating, info):
+        def _log_image(image_bytes, rating, info, user):
             """
             Takes in image bytes, rating, and JSON formatted generation info.
 
@@ -166,11 +151,11 @@ def create_image_generation_tab(image_type):
                 return gr.update(value="No image to log. Please generate an image first.", visible=True)
             
             image_name = json.loads(info.replace("\n", "\\n")).get('job_timestamp')
-            if rating is None or rating < 1 or rating > 10:
-                return gr.update(value="Please provide a valid rating between 1 and 10 before logging.", visible=True)
+            if rating is None:
+                return gr.update(value="Please provide a rating.", visible=True)
 
             try:
-                log_result = log_image(image_bytes, image_name, rating, info)
+                log_result = log_image(image_bytes, image_name, rating, info, user)
                 return gr.update(value=log_result, visible=True)
             except Exception as e:
                 return gr.update(value=f"Error logging image: {str(e)}", visible=True)
@@ -184,12 +169,12 @@ def create_image_generation_tab(image_type):
             inputs=[gr.Textbox(value=image_type, visible=False), img_model, output_prompt, negative_prompt,
                     img_width, img_height, sampling_method, schedule_type, batch_count, batch_size,
                     cfg_scale, seed, sampling_steps],
-            outputs=[output_image, info_output, image_bytes_state, info_output, rating_row, log_row]
+            outputs=[output_image, info_output, image_bytes_state, info_output, rating_row, user_row, log_row]
         )
 
         log_button.click(
             _log_image,
-            inputs=[image_bytes_state, rating, info_output],
+            inputs=[image_bytes_state, rating, info_output, user],
             outputs=[success_text]
         ).then(
             lambda: gr.update(visible=True),
