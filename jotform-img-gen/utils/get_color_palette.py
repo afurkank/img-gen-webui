@@ -200,6 +200,8 @@ def get_structured_color_descriptions(form_id: int, prompt_file_path: str) -> st
     ```
     """
     logo_url = get_logo_url(form_id=form_id)
+    if not logo_url:
+        return None
     frequent_colors = get_logo_color_palette(logo_url=logo_url)
 
     system_prompt, user_prompt = read_prompts_from_file(prompt_file_path, frequent_colors=frequent_colors, len=len)

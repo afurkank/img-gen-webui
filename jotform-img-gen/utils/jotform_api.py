@@ -49,9 +49,12 @@ def get_logo_url(form_id: int):
 
         parsed_dict = ast.literal_eval(json_str.replace('\\', ''))
 
-        logo_url = parsed_dict['@formCoverImg']
-
-        return logo_url
+        try:
+            logo_url = parsed_dict['@formCoverImg']
+            return logo_url
+        except:
+            logging.info("Form doesn't have a logo, continuing without color extraction..")
+            return None
     else:
         # Request failed
         logging.info(f"Request failed with status code: {response.status_code}")
