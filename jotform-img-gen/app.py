@@ -42,66 +42,68 @@ def generate_image(image_type, img_model, prompt, negative_prompt, rmv_bg: bool,
 def create_image_generation_tab(image_type):
     with gr.Tab(f"{image_type.capitalize()} Generation"):
         with gr.Row():
-            form_id = gr.Number(label="Form ID", value=None, minimum=0, step=1, interactive=True)
-            prompt = gr.Textbox(label="Prompt", placeholder="Prompt")
-            negative_prompt = gr.Textbox(label="Negative prompt", placeholder="Negative prompt")
-
-        with gr.Row():
-            llm_model = gr.Dropdown(["gpt-3.5-turbo", "llama3-8b", "llama3-70b", "mixtral-8x7b"], value="gpt-3.5-turbo", label="Prompt Model")
-            img_model = gr.Dropdown(
-                [
-                    "sd_xl_base_1.0",
-                    "sd_xl_turbo_1.0_fp16",
-                    "Juggernaut_X_RunDiffusion",
-                    "Juggernaut_X_RunDiffusion_Hyper",
-                    "sd3_medium_incl_clips_t5xxlfp16",
-                    "Juggernaut-XL_v9_RunDiffusionPhoto_v2",
-                    "sdxl_lightning_4step",
-                    "sdxl_lightning_8step",
-                    "Juggernaut_RunDiffusionPhoto2_Lightning_4Steps"
-                ],
-                value="sd_xl_turbo_1.0_fp16",
-                label="Image Model"
-            )
-        with gr.Row():
             with gr.Column(scale=2):
-                with gr.Accordion("Advanced Options", open=False):
-                    with gr.Row():
-                        img_width = gr.Slider(minimum=64, step=16, maximum=2048, value="512", label="Image Width")
-                        img_height = gr.Slider(minimum=64, step=16, maximum=2048, value="512", label="Image Height")
-                        sampling_method = gr.Dropdown(
-                            ["DPM++ 2M", "DPM++ SDE", "DPM++ 2M SDE", "DPM++ 2M SDE Heun", "DPM++ 2S a",
-                            "DPM++ 3M SDE", "Euler a", "Euler", "LMS", "Heun", "DPM2", "DPM2 a", "DPM fast",
-                            "DPM adaptive", "Restart", "DDIM", "PLMS", "UniPC", "LCM"],
-                            value="DPM++ 2M",
-                            label="Sampling method"
-                        )
-                        schedule_type = gr.Dropdown(
-                            ["Automatic", "Uniform", "Karras", "Exponential", "Poly Exponential", "SGM Uniform"],
-                            value="Karras",
-                            label="Schedule type"
-                        )
-                        cfg_scale = gr.Slider(minimum=1, maximum=30, value=1, step=0.5, label="CFG Scale")
-                        sampling_steps = gr.Slider(minimum=1, maximum=150, value=1, step=1, label="Sampling steps")
-                        batch_count = gr.Slider(minimum=1, maximum=100, value=1, step=1, label="Batch count")
-                        batch_size = gr.Slider(minimum=1, maximum=8, value=1, step=1, label="Batch size")
-                        seed = gr.Number(value=-1, minimum=-1, precision=0, step=1, label="Seed")
-                    with gr.Row():
-                        use_detailed_hands_lora = gr.Checkbox(value=False, label="Detailed Hands Lora")
-                        use_white_bg_lora = gr.Checkbox(value=False, label="White Background Lora")
-                        use_sdxl_lightning_4step_lora = gr.Checkbox(value=False, label="SDXL-Lightning 4 Step Lora")
-                        use_sdxl_lightning_8step_lora = gr.Checkbox(value=False, label="SDXL-Lightning 8 Step Lora")
-            with gr.Column(scale=4):
+                with gr.Row(equal_height=True):
+                    form_id = gr.Number(label="Form ID", value=None, minimum=0, step=1, interactive=True, scale=1)
+                    prompt = gr.Textbox(label="Prompt", placeholder="Prompt", scale=2)
+                    negative_prompt = gr.Textbox(label="Negative prompt", placeholder="Negative prompt", scale=2)
+                with gr.Row(equal_height=True):
+                    llm_model = gr.Dropdown(["gpt-3.5-turbo", "llama3-8b", "llama3-70b", "mixtral-8x7b"], value="gpt-3.5-turbo", label="Prompt Model", scale=1)
+                    img_model = gr.Dropdown(
+                        [
+                            "sd_xl_base_1.0",
+                            "sd_xl_turbo_1.0_fp16",
+                            "Juggernaut_X_RunDiffusion",
+                            "Juggernaut_X_RunDiffusion_Hyper",
+                            "sd3_medium_incl_clips_t5xxlfp16",
+                            "Juggernaut-XL_v9_RunDiffusionPhoto_v2",
+                            "sdxl_lightning_4step",
+                            "sdxl_lightning_8step",
+                            "Juggernaut_RunDiffusionPhoto2_Lightning_4Steps"
+                        ],
+                        value="sd_xl_turbo_1.0_fp16",
+                        label="Image Model",
+                        scale=2
+                    )
+                    update_options_bttn = gr.Button("Update Generation Parameters", size='sm', scale=0)
+
                 with gr.Row():
-                    rmv_bg_checkbox = gr.Checkbox(value=False, label="Remove background")
+                    if image_type=='avatar':
+                            rmv_bg_checkbox = gr.Checkbox(value=False, label="Remove background", scale=1)
+                    else:
+                        rmv_bg_checkbox = gr.Checkbox(value=False, label="Remove background", scale=1, visible=False)
                 with gr.Row():
-                    generate_button = gr.Button("Generate Image", size='sm')
-                with gr.Row():
-                    output_prompt = gr.Textbox(label="Generated Prompt", placeholder="Prompt generated by LLM", interactive=False)
-                with gr.Row():
-                    output_image = gr.Image(label="Generated Image", elem_id=f"output-image-{image_type}", type="pil", width=512, height=600)
-                with gr.Row():
-                    info_output = gr.Textbox(label="Generation Info", visible=False)
+                    with gr.Accordion("Generation Parameters", open=False):
+                        with gr.Row(equal_height=True):
+                            img_width = gr.Slider(minimum=64, step=16, maximum=2048, value="512", label="Image Width", scale=1)
+                            img_height = gr.Slider(minimum=64, step=16, maximum=2048, value="512", label="Image Height", scale=1)
+                            sampling_method = gr.Dropdown(
+                                ["DPM++ 2M", "DPM++ SDE", "DPM++ 2M SDE", "DPM++ 2M SDE Heun", "DPM++ 2S a",
+                                "DPM++ 3M SDE", "Euler a", "Euler", "LMS", "Heun", "DPM2", "DPM2 a", "DPM fast",
+                                "DPM adaptive", "Restart", "DDIM", "PLMS", "UniPC", "LCM"],
+                                value="DPM++ 2M",
+                                label="Sampling method", scale=1
+                            )
+                        with gr.Row(equal_height=True):
+                            schedule_type = gr.Dropdown(
+                                ["Automatic", "Uniform", "Karras", "Exponential", "Poly Exponential", "SGM Uniform"],
+                                value="Karras",
+                                label="Schedule type", scale=1
+                            )
+                            cfg_scale = gr.Slider(minimum=1, maximum=30, value=1, step=0.5, label="CFG Scale", scale=1)
+                            sampling_steps = gr.Slider(minimum=1, maximum=150, value=1, step=1, label="Sampling steps")
+                        with gr.Row(equal_height=True):
+                            batch_count = gr.Slider(minimum=1, maximum=100, value=1, step=1, label="Batch count")
+                            batch_size = gr.Slider(minimum=1, maximum=8, value=1, step=1, label="Batch size")
+                            seed = gr.Number(value=1337, minimum=0, precision=0, step=1, label="Seed")
+                        with gr.Row(equal_height=True):
+                            use_detailed_hands_lora = gr.Checkbox(value=False, label="Detailed Hands Lora", scale=1)
+                            use_white_bg_lora = gr.Checkbox(value=False, label="White Background Lora", scale=1)
+                            use_sdxl_lightning_4step_lora = gr.Checkbox(value=False, label="SDXL-Lightning 4 Step Lora", scale=1)
+                            use_sdxl_lightning_8step_lora = gr.Checkbox(value=False, label="SDXL-Lightning 8 Step Lora", scale=1)
+                generate_button = gr.Button("Generate Image", size='sm')
+                output_prompt = gr.Textbox(label="Generated Prompt", placeholder="Prompt generated by LLM", interactive=False)
+                info_output = gr.Textbox(label="Generation Info", visible=False)
                 with gr.Row(visible=False) as rating_row:
                     rating = gr.Slider(label="Image Rating (1-10)", minimum=1, maximum=10, step=0.5, value=5, interactive=True)
                 with gr.Row(visible=False) as user_row:
@@ -111,6 +113,10 @@ def create_image_generation_tab(image_type):
                 with gr.Row(visible=False) as success_row:
                     success_text = gr.Textbox(label="Logging Status", placeholder="", interactive=False)
 
+            with gr.Column(scale=1):
+                output_image = gr.Image(label="Generated Image", elem_id=f"output-image-{image_type}", type="pil", width=512, height=600)
+                
+
         image_bytes_state = gr.State(None)
 
         def _generate_prompt(image_type, form_id, prompt, llm_model):
@@ -119,7 +125,8 @@ def create_image_generation_tab(image_type):
 
         def _generate_image(image_type:str, img_model:str, prompt:str, negative_prompt:str, width:int, 
                             height:int, sampling_method:str, schedule_type:str, batch_count:int, batch_size:int, 
-                            cfg_scale:float, seed:int, sampling_steps:int, rmv_bg_checkbox):
+                            cfg_scale:float, seed:float, sampling_steps:int, rmv_bg_checkbox,
+                            hands_lora:bool, white_bg_lora:bool, sdxl_light_4s_lora:bool, sdxl_light_8s_lora:bool):
             parameters = {
                 'width': width,
                 'height': height,
@@ -130,17 +137,17 @@ def create_image_generation_tab(image_type):
                 'cfg_scale': cfg_scale,
                 'seed': seed,
                 'sampling_steps': sampling_steps,
-                'use_detailed_hands_lora': use_detailed_hands_lora.value,
-                'use_white_bg_lora': use_white_bg_lora.value,
-                'use_4step_lora': use_sdxl_lightning_4step_lora.value,
-                'use_8step_lora': use_sdxl_lightning_8step_lora.value,
+                'use_detailed_hands_lora': hands_lora,
+                'use_white_bg_lora': white_bg_lora,
+                'use_4step_lora': sdxl_light_4s_lora,
+                'use_8step_lora': sdxl_light_8s_lora,
             }
             pil_image, info, image_bytes = generate_image(image_type, img_model, prompt, negative_prompt, rmv_bg_checkbox, **parameters)
 
             if pil_image is not None:
-                return pil_image, info, image_bytes, gr.update(visible=False), gr.update(visible=True), gr.update(visible=True), gr.update(visible=True) # change the 1st gr.update to make info visible
+                return pil_image, info, image_bytes, gr.update(visible=True), gr.update(visible=True), gr.update(visible=True) # change the 1st gr.update to make info visible
             else:
-                return None, info, None, gr.update(visible=False), gr.update(visible=False), gr.update(visible=False), gr.update(visible=False)
+                return None, info, None, gr.update(visible=False), gr.update(visible=False), gr.update(visible=False)
 
         def _log_image(image_bytes, rating, info, user, form_id):
             """
@@ -164,14 +171,19 @@ def create_image_generation_tab(image_type):
 
         generate_button.click(
             _generate_prompt,
+
             inputs=[gr.Textbox(value=image_type, visible=False), form_id, prompt, llm_model],
+
             outputs=[output_prompt, info_output]
         ).then(
             _generate_image,
+
             inputs=[gr.Textbox(value=image_type, visible=False), img_model, output_prompt, negative_prompt,
                     img_width, img_height, sampling_method, schedule_type, batch_count, batch_size,
-                    cfg_scale, seed, sampling_steps, rmv_bg_checkbox],
-            outputs=[output_image, info_output, image_bytes_state, info_output, rating_row, user_row, log_row]
+                    cfg_scale, seed, sampling_steps, rmv_bg_checkbox, use_detailed_hands_lora,
+                    use_white_bg_lora, use_sdxl_lightning_4step_lora, use_sdxl_lightning_8step_lora],
+
+            outputs=[output_image, info_output, image_bytes_state, rating_row, user_row, log_row]
         )
 
         log_button.click(
@@ -184,7 +196,7 @@ def create_image_generation_tab(image_type):
         )
 
 css = '''
-.gradio-container{max-width: 1000px !important}
+.gradio-container{max-width: 1200px !important}
 h1{text-align:center}
 .clickable-image img {
     cursor: pointer;
