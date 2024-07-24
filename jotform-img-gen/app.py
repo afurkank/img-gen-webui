@@ -119,10 +119,6 @@ def create_image_generation_tab(image_type):
 
         image_bytes_state = gr.State(None)
 
-        def _generate_prompt(image_type, form_id, prompt, llm_model):
-            generated_prompt, error = generate_prompt(image_type, form_id, prompt, llm_model)
-            return generated_prompt, error
-
         def _generate_image(image_type:str, img_model:str, prompt:str, negative_prompt:str, width:int, 
                             height:int, sampling_method:str, schedule_type:str, batch_count:int, batch_size:int, 
                             cfg_scale:float, seed:float, sampling_steps:int, rmv_bg_checkbox,
@@ -170,7 +166,7 @@ def create_image_generation_tab(image_type):
                 return gr.update(value=f"Error logging image: {str(e)}", visible=True)
 
         generate_button.click(
-            _generate_prompt,
+            generate_prompt,
 
             inputs=[gr.Textbox(value=image_type, visible=False), form_id, prompt, llm_model],
 
