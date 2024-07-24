@@ -1,4 +1,5 @@
 import json
+import logging
 import PIL.Image
 import gradio as gr
 
@@ -119,10 +120,6 @@ def create_image_generation_tab(image_type):
 
         image_bytes_state = gr.State(None)
 
-        def _generate_prompt(image_type, form_id, prompt, llm_model):
-            generated_prompt, error = generate_prompt(image_type, form_id, prompt, llm_model)
-            return generated_prompt, error
-
         def _generate_image(image_type:str, img_model:str, prompt:str, negative_prompt:str, width:int, 
                             height:int, sampling_method:str, schedule_type:str, batch_count:int, batch_size:int, 
                             cfg_scale:float, seed:float, sampling_steps:int, rmv_bg_checkbox,
@@ -168,9 +165,66 @@ def create_image_generation_tab(image_type):
                 return gr.update(value=log_result, visible=True)
             except Exception as e:
                 return gr.update(value=f"Error logging image: {str(e)}", visible=True)
+        
+        def update_options(sd_model_name: str):
+            parameter_mapping = {
+                'Juggernaut_RunDiffusionPhoto2_Lightning_4Steps': {
+                    'width': 1024,'height': 1024,'sampling_method': 'DPM++ SDE',
+                    'schedule_type': 'Karras','cfg_scale': 1.5,'sampling_steps': 6,
+                },
+                'Juggernaut-XL_v9_RunDiffusionPhoto_v2': {
+                    'width': 832,'height': 1216,'sampling_method': 'DPM++ 2M',
+                    'schedule_type': 'Karras','cfg_scale': 5,'sampling_steps': 30,
+                },
+                'Juggernaut_X_RunDiffusion': {
+                    'width': 832,'height': 1216,'sampling_method': 'DPM++ 2M',
+                    'schedule_type': 'Karras','cfg_scale': 5,'sampling_steps': 30,
+                },
+                'Juggernaut_X_RunDiffusion_Hyper': {
+                    'width': 832,'height': 1216,'sampling_method': 'DPM++ SDE',
+                    'schedule_type': 'Karras','cfg_scale': 1.5,'sampling_steps': 5,
+                },
+                'sdxl_lightning_4step': {
+                    'width': 1024,'height': 1024,'sampling_method': 'Euler',
+                    'schedule_type': 'SGM Uniform','cfg_scale': 1,'sampling_steps': 4,
+                },
+                'sdxl_lightning_8step': {
+                    'width': 1024,'height': 1024,'sampling_method': 'Euler',
+                    'schedule_type': 'SGM Uniform','cfg_scale': 1,'sampling_steps': 8,
+                }
+            }
+
+            if sd_model_name in parameter_mapping:
+                return parameter_mapping[sd_model_name]
+            else:
+                return {
+                    'width': 512,'height': 512,'sampling_method': 'DPM++ 2M',
+                    'schedule_type': 'Karras','cfg_scale': 1,'sampling_steps': 1
+                }
+        
+        def update_ui_components(sd_model_name):
+            new_params = update_options(sd_model_name)
+            
+            updates = [
+                gr.update(value=new_params['width']),  # for img_width
+                gr.update(value=new_params['height']),  # for img_height
+                gr.update(value=new_params['sampling_method']),  # for sampling_method
+                gr.update(value=new_params['schedule_type']),  # for schedule_type
+                gr.update(value=new_params['cfg_scale']),  # for cfg_scale
+                gr.update(value=new_params['sampling_steps'])   # for sampling_steps
+            ]
+            logging.info(f"Updated parameters for {sd_model_name}")
+            
+            return updates
+
+        update_options_bttn.click(
+            update_ui_components,
+            inputs=[img_model],
+            outputs=[img_width, img_height, sampling_method, schedule_type, cfg_scale, sampling_steps]
+        )
 
         generate_button.click(
-            _generate_prompt,
+            generate_prompt,
 
             inputs=[gr.Textbox(value=image_type, visible=False), form_id, prompt, llm_model],
 
